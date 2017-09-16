@@ -1,7 +1,8 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 
-// var {mongoose} = require('mongoose');
+var {mongoose} = require('./db/mongoose.js');
+var {Book} = require('./models/book.js');
 
 var app = express();
 
@@ -13,12 +14,21 @@ app.get('/', (req, res) => {
     res.send('Welcome to library api');
 });
 
-app.post('/book', (req, res) => {
-    var title = req.body.title;
-    var barcode = req.body.barcode;
-    res.send({
-        title,
-        barcode
+app.post('/books', (req, res) => {
+    var book = new Book({
+        title: req.body.title,
+        author: {
+            first: req.body.author.first,
+            last: req.body.author.last
+        },
+        callNumber: req.body.callNumber,
+        barcode: req.body.barcode
+    });
+
+    book.save().then((doc) => {
+       res.status(201).send(doc); 
+    }, (err) => {
+        res.status(400).send(err)
     });
 });
 
