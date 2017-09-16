@@ -25,7 +25,8 @@ var BookSchema = new mongoose.Schema({
     },
     barcode: {
         type: Number,
-        required: true
+        required: true,
+        unique: true
     }
 });
 
